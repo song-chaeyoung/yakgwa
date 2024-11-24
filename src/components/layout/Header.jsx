@@ -6,7 +6,7 @@ import styled from "styled-components";
 import HeaderList from "./HeaderList";
 import { Link } from "react-router-dom";
 
-const HeaderContainer = styled.div`
+const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   left: 0;

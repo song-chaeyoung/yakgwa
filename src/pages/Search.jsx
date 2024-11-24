@@ -1,7 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { searchKeyword } from "../atoms";
+import {
+  searchDrugEfcyQesitm,
+  searchDrugEntpName,
+  searchDrugName,
+} from "../api";
+import { useQueries } from "@tanstack/react-query";
 
 const Conatiner = styled.section`
   width: 100%;
@@ -53,7 +61,7 @@ const Conatiner = styled.section`
   }
   .searchInfo {
     position: absolute;
-    top: 75%;
+    top: 70%;
     left: 0;
     width: 100%;
     display: flex;
@@ -104,7 +112,7 @@ const Conatiner = styled.section`
   }
 `;
 
-const searchResult = [
+const defaultSearchResult = [
   "두통",
   "소화제",
   "고혈압",
@@ -127,28 +135,60 @@ const variants = {
 
 const Search = () => {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [keyword, setKeyword] = useRecoilState(searchKeyword);
   const [searching, setSearching] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate(`/result?q=${keyword}`);
+    goResult(searchInput);
+    setKeyword(searchInput);
   };
 
-  const searchKeyword = (item) => {
+  const goResult = (item) => {
     navigate(`/result?q=${item}`);
   };
 
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["drugName", searchInput],
+        queryFn: () => searchDrugName(searchInput),
+        enabled: !!searchInput?.trim(),
+        select: (data) =>
+          Array.isArray(data.body.items) ? data.body.items : [],
+      },
+      {
+        queryKey: ["drugEfcy", searchInput],
+        queryFn: () => searchDrugEfcyQesitm(searchInput),
+        enabled: !!searchInput?.trim(),
+        select: (data) =>
+          Array.isArray(data.body.items) ? data.body.items : [],
+      },
+      {
+        queryKey: ["drugEntp", searchInput],
+        queryFn: () => searchDrugEntpName(searchInput),
+        enabled: !!searchInput?.trim(),
+        select: (data) =>
+          Array.isArray(data.body.items) ? data.body.items : [],
+      },
+    ],
+  });
+
+  const data = results.map((result) => result.data || []);
+  const searchResult = data.flat().slice(0, 10);
+
+  console.log(searchResult);
   return (
     <Conatiner>
       <form className="topSearch" onSubmit={handleSubmit}>
         <input
           type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           onFocus={() => setSearching(true)}
           onBlur={() => setSearching(false)}
-          placeholder="병원, 약품, 키워드 입력"
+          placeholder="약품명, 회사, 증상 입력"
         />
         <button type="submit">검색</button>
         <AnimatePresence>
@@ -160,11 +200,21 @@ const Search = () => {
               animate="animate"
               exit="exit"
             >
-              {searchResult.map((item, index) => (
-                <p key={index} onClick={() => searchKeyword(item)}>
-                  {item}
-                </p>
-              ))}
+              {searchInput.length === 0
+                ? defaultSearchResult.map((item, index) => (
+                    <p key={index}>{item}</p>
+                  ))
+                : searchResult.map((item, index) => (
+                    <p
+                      key={index}
+                      onClick={() => {
+                        goResult(item);
+                        setKeyword(item);
+                      }}
+                    >
+                      {item.itemName}
+                    </p>
+                  ))}
             </motion.div>
           )}
         </AnimatePresence>

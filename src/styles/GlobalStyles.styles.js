@@ -47,6 +47,8 @@ export const GlobalStyle = createGlobalStyle`
     background: #fff;
     section {
       padding-top: 60px;
+  /* padding: 4rem 1.5rem 6rem; */
+
       /* padding: 0 10px; */
       /* padding: 60px 10px 0; */
     }

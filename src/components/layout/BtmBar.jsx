@@ -45,9 +45,17 @@ const Container = styled.div`
 const BtmBar = () => {
   const navigate = useNavigate();
   const homeMatch = useMatch("/");
-  const questionMatch = useMatch("/question");
-  const searchMatch = useMatch("/search");
+  const question1Match = useMatch("/question");
+  const searchHomeMatch = useMatch("/search");
+  const searchDrugMatch = useMatch("/drugResult");
+  const searchResultMatch = useMatch("/result");
   const bookmarkMatch = useMatch("/bookmark");
+  const alAnswerMatch = useMatch("/alAnswer");
+  const searchMatch = Boolean(
+    searchHomeMatch || searchDrugMatch || searchResultMatch
+  );
+
+  const questionMatch = Boolean(question1Match || alAnswerMatch);
 
   return (
     <Container>

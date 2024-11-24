@@ -8,6 +8,7 @@ import Search from "./pages/Search";
 import SearchResult from "./pages/SearchResult";
 import Bookmark from "./pages/Bookmark";
 import AlAnswer from "./pages/AlAnswer";
+import DrugResult from "./pages/drugResult";
 
 const App = () => {
   const router = createBrowserRouter([
@@ -22,7 +23,7 @@ const App = () => {
           children: [],
         },
         {
-          path: "question/:question",
+          path: "alanswer",
           element: <AlAnswer />,
         },
         {
@@ -32,6 +33,10 @@ const App = () => {
         {
           path: "result",
           element: <SearchResult />,
+        },
+        {
+          path: "drugresult",
+          element: <DrugResult />,
         },
         {
           path: "bookmark",

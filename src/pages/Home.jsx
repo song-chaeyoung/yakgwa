@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "@tanstack/react-query";
+import { getAllDrugs, searchDrugEfcyQesitm } from "../api";
 const Container = styled.section`
   width: 100%;
   height: 100vh;
-  /* height: calc(100vh - 60px); */
   background: var(--main-color);
   .home_top_search {
     /* height: fit-content; */
@@ -84,6 +85,10 @@ const Container = styled.section`
         font-weight: 500;
         line-height: 100%;
         cursor: pointer;
+        &.active {
+          background: #fed543;
+          color: #fff;
+        }
       }
     }
     .home_symptom_list {
@@ -91,13 +96,16 @@ const Container = styled.section`
       flex-direction: column;
       gap: 1.5rem;
       padding: 0 0.75rem;
+      width: 100%;
       .home_symptom {
+        min-width: 100%;
         padding: 1.12rem;
         display: flex;
         gap: 1.25rem;
         align-items: center;
         background: #efefef;
         border-radius: 1.25rem;
+        cursor: pointer;
         .home_symptom_img {
           width: 5rem;
           height: 5rem;
@@ -133,6 +141,26 @@ const Container = styled.section`
 `;
 
 const Home = () => {
+  const [selectedValue, setSelectedValue] = useState("1");
+
+  const handleChange = (e) => {
+    setSelectedValue(e.target.value);
+  };
+
+  // const allDrug = useQuery({
+  //   queryKey: ["allDrug"],
+  //   queryFn: () => getAllDrugs(),
+  // });
+
+  const efcyItem = "비타민";
+
+  const efcyQesitm = useQuery({
+    queryKey: ["efcyQesitm", efcyItem],
+    queryFn: () => searchDrugEfcyQesitm(efcyItem),
+  });
+
+  console.log(efcyQesitm.data?.body.items);
+
   return (
     <Container>
       <div className="home_top_search">
@@ -140,10 +168,13 @@ const Home = () => {
           <label htmlFor="search_type">
             <FontAwesomeIcon icon={faLocationDot} />
           </label>
-          <select name="search_type" id="search_type">
-            <option value="1" selected>
-              통합검색
-            </option>
+          <select
+            name="search_type"
+            id="search_type"
+            onChange={handleChange}
+            value={selectedValue}
+          >
+            <option value="1">통합검색</option>
             <option value="2">의사검색</option>
             <option value="3">약국검색</option>
           </select>
@@ -157,30 +188,30 @@ const Home = () => {
       </div>
       <div className="home_btm_exam">
         <div className="home_category">
-          <span>카테고리</span>
-          <span>카테고리</span>
-          <span>카테고리</span>
+          <span className="active">약품 추천</span>
+          <span>영양제 추천</span>
+          {/* <span>카테고리</span> */}
         </div>
         <div className="home_symptom_list">
           <div className="home_symptom">
             <div className="home_symptom_img"></div>
             <div className="home_symptom_desc">
-              <h5>메인증상 텍스트</h5>
-              <p>서브증상 텍스트</p>
+              <h5>오늘의 영양제 : 비타민</h5>
+              <p>추천 약 알아보기</p>
             </div>
           </div>
           <div className="home_symptom">
             <div className="home_symptom_img"></div>
             <div className="home_symptom_desc">
-              <h5>메인증상 텍스트</h5>
-              <p>서브증상 텍스트</p>
+              <h5>자도자도 피곤해요</h5>
+              <p>추천 약 알아보기</p>
             </div>
           </div>
           <div className="home_symptom">
             <div className="home_symptom_img"></div>
             <div className="home_symptom_desc">
-              <h5>메인증상 텍스트 메인증상 텍스트 메인증상 텍스트</h5>
-              <p>AI에게 상담하기</p>``
+              <h5>소화가 안되고 속이 메스꺼워요</h5>
+              <p>추천 약 알아보기</p>
             </div>
           </div>
         </div>
