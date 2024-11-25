@@ -30,6 +30,6 @@ dist-ssr
 !.vscode/extensions.json
 
 # Firebase
-firebase.js
+firebase.jsx
 firebase.json
 firebase-debug.log*
