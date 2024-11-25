@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
 import { getAllDrugs, searchDrugEfcyQesitm } from "../api";
+import HomeTab from "../components/HomeTab";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { firstQuestion } from "../atoms";
 const Container = styled.section`
   width: 100%;
   height: 100vh;
@@ -91,57 +95,16 @@ const Container = styled.section`
         }
       }
     }
-    .home_symptom_list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      padding: 0 0.75rem;
-      width: 100%;
-      .home_symptom {
-        min-width: 100%;
-        padding: 1.12rem;
-        display: flex;
-        gap: 1.25rem;
-        align-items: center;
-        background: #efefef;
-        border-radius: 1.25rem;
-        cursor: pointer;
-        .home_symptom_img {
-          width: 5rem;
-          height: 5rem;
-          min-width: 5rem;
-          background: #999;
-          > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-          }
-        }
-        .home_symptom_desc {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          > h5 {
-            font-size: 1.125rem;
-            font-weight: 500;
-            word-break: keep-all;
-            line-height: 140%;
-          }
-          > p {
-            font-size: 0.875rem;
-            color: #666;
-            &::after {
-              content: " >";
-            }
-          }
-        }
-      }
-    }
   }
 `;
 
+const categories = ["약품 추천", "영양제 추천"];
+
 const Home = () => {
   const [selectedValue, setSelectedValue] = useState("1");
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const navigate = useNavigate();
+  const setFirstQuestionInput = useSetRecoilState(firstQuestion);
 
   const handleChange = (e) => {
     setSelectedValue(e.target.value);
@@ -159,7 +122,17 @@ const Home = () => {
     queryFn: () => searchDrugEfcyQesitm(efcyItem),
   });
 
-  console.log(efcyQesitm.data?.body.items);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const question = e.target[0].value;
+
+    if (selectedValue === "drug") {
+      navigate(`/result?q=${question}`);
+    } else if (selectedValue === "ai") {
+      setFirstQuestionInput(question);
+      navigate(`/alanswer`);
+    }
+  };
 
   return (
     <Container>
@@ -174,13 +147,15 @@ const Home = () => {
             onChange={handleChange}
             value={selectedValue}
           >
-            <option value="1">통합검색</option>
-            <option value="2">의사검색</option>
-            <option value="3">약국검색</option>
+            <option value={selectedValue} disabled>
+              분야 선택하기
+            </option>
+            <option value="drug">의약품검색</option>
+            <option value="ai">AI질문</option>
           </select>
         </div>
-        <form action="">
-          <input type="text" placeholder="어디가 아프신가요?" />
+        <form action="" onSubmit={handleSubmit}>
+          <input type="text" placeholder="어디가 아프신가요?" required />
           <button type="submit">
             <FontAwesomeIcon icon={faSearch} />
           </button>
@@ -188,33 +163,18 @@ const Home = () => {
       </div>
       <div className="home_btm_exam">
         <div className="home_category">
-          <span className="active">약품 추천</span>
-          <span>영양제 추천</span>
+          {categories.map((category, index) => (
+            <span
+              key={index}
+              className={selectedCategory === category ? "active" : ""}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </span>
+          ))}
           {/* <span>카테고리</span> */}
         </div>
-        <div className="home_symptom_list">
-          <div className="home_symptom">
-            <div className="home_symptom_img"></div>
-            <div className="home_symptom_desc">
-              <h5>오늘의 영양제 : 비타민</h5>
-              <p>추천 약 알아보기</p>
-            </div>
-          </div>
-          <div className="home_symptom">
-            <div className="home_symptom_img"></div>
-            <div className="home_symptom_desc">
-              <h5>자도자도 피곤해요</h5>
-              <p>추천 약 알아보기</p>
-            </div>
-          </div>
-          <div className="home_symptom">
-            <div className="home_symptom_img"></div>
-            <div className="home_symptom_desc">
-              <h5>소화가 안되고 속이 메스꺼워요</h5>
-              <p>추천 약 알아보기</p>
-            </div>
-          </div>
-        </div>
+        <HomeTab selectedCategory={selectedCategory} />
       </div>
     </Container>
   );

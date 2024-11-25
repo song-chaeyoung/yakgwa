@@ -55,4 +55,17 @@ export const searchDrugEntpName = async (keyword) => {
   }
 };
 
+export const searchDrugiItemSeq = async (keyword) => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/itemSeq?keyword=${encodeURIComponent(keyword)}`
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error searching drugs:", error);
+    throw error;
+  }
+};
+
 export const getSearchDrugList = async (keywordParams) => {};

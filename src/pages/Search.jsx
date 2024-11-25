@@ -106,6 +106,7 @@ const Conatiner = styled.section`
           background: #fff;
           padding: 4px 8px;
           color: var(--main-color);
+          cursor: pointer;
         }
       }
     }
@@ -125,6 +126,17 @@ const defaultSearchResult = [
   "피부염",
   "소염제",
   "항생제",
+];
+
+const oftenDrugs = [
+  "피로회복",
+  "항생제",
+  "소염",
+  "두통",
+  "소화",
+  "고혈압",
+  "피부",
+  "진통",
 ];
 
 const variants = {
@@ -228,14 +240,11 @@ const Search = () => {
               자주 찾는 약물
             </h3>
             <div className="searchDrugList_items searchList_items">
-              <span>#피로회복제</span>
-              <span>#항생제</span>
-              <span>#소염제</span>
-              <span>#두통약</span>
-              <span>#소화제</span>
-              <span>#고혈압약</span>
-              <span>#피부연고</span>
-              <span>#진통제</span>
+              {oftenDrugs.map((it, idx) => (
+                <span key={idx} onClick={() => goResult(it)}>
+                  #{it}
+                </span>
+              ))}
             </div>
           </div>
           <div className="searchHospitalList searchList">

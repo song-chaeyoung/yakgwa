@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -80,6 +80,10 @@ const Question = () => {
 
   // const { register, handleSubmit, setValue } = useForm();
   // console.log(firstQuestionInput);
+
+  useEffect(() => {
+    setFirstQuestionInput("");
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

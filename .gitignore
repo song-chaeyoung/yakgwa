@@ -28,3 +28,8 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
+
+# Firebase
+firebase.js
+firebase.json
+firebase-debug.log*
