@@ -30,6 +30,7 @@ import {
 import { auth, db } from "../firebase";
 import Bookmark from "./Bookmark";
 import Alert from "../components/Alert";
+import Error from "../components/Error";
 
 const Container = styled.section`
   width: 100%;
@@ -125,7 +126,6 @@ const Container = styled.section`
     }
   }
   .addBookmark {
-    /* height: fit-content; */
     position: fixed;
     bottom: 100px;
     left: 50%;
@@ -151,9 +151,7 @@ const Container = styled.section`
       }
     }
     > div {
-      /* width: 0.25rem; */
       width: 0.1rem;
-      /* height: 100%; */
       height: 2.25rem;
       background-color: #ccc;
     }
@@ -208,20 +206,11 @@ const SearchResult = () => {
     navigate(`/drugresult?q=${item.itemName}`);
   };
 
-  // bookmarkBox 처리
-  useEffect(() => {
-    setCheckedItems(
-      searchResult.map((item) => ({
-        itemSeq: item.itemSeq,
-        itemName: item.itemName,
-        isChecked: false,
-      }))
-    );
-  }, []);
-
-  useEffect(() => {
-    setBookmarkBox(checkedItems.some((item) => item.isChecked));
-  }, [checkedItems]);
+  // useEffect(() => {
+  //   if (checkedItems.length > 0) {
+  //     setBookmarkBox(checkedItems.some((item) => item.isChecked));
+  //   }
+  // }, [checkedItems]);
 
   const allCancel = () => {
     setCheckedItems([]);
@@ -242,17 +231,34 @@ const SearchResult = () => {
           Bookmark: checkedData,
         });
       } else {
+        const existingBookmarks = userDoc.data().Bookmark || [];
+        const newBookmarks = [...existingBookmarks, ...checkedData];
+
+        // 중복 제거 (itemSeq를 기준으로)
+        const uniqueBookmarks = Array.from(
+          new Map(newBookmarks.map((item) => [item.itemSeq, item])).values()
+        );
+
         await updateDoc(userDocRef, {
-          Bookmark: [...userDoc.data().Bookmark, ...checkedData],
+          Bookmark: uniqueBookmarks,
         });
+
+        // await updateDoc(userDocRef, {
+        //   Bookmark: [...userDoc.data().Bookmark, ...checkedData],
+        // });
       }
     } catch (err) {
       console.log("submit error", err);
     } finally {
-      setCheckedItems([]);
+      // setCheckedItems([]);
+      setCheckedItems((prevItems) =>
+        prevItems.map((item) => (item ? { ...item, isChecked: false } : item))
+      );
       setAlert(true);
     }
   };
+
+  console.log(checkedItems);
 
   // data 처리
   const isLoading = results.some((result) => result.isLoading);
@@ -260,8 +266,34 @@ const SearchResult = () => {
   const data = results.map((result) => result.data || []);
   const searchResult = data.flat();
 
+  // bookmarkBox 처리
+  useEffect(() => {
+    // const searchResult = data.flat();
+    if (searchResult && searchResult.length > 0) {
+      setCheckedItems(
+        searchResult.map((item) => ({
+          itemSeq: item.itemSeq,
+          itemName: item.itemName,
+          entpName: item.entpName,
+          isChecked: false,
+        }))
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (checkedItems && checkedItems.length > 0) {
+      const hasCheckedItems = checkedItems.some((item) => item?.isChecked);
+      setBookmarkBox(hasCheckedItems);
+    } else {
+      setBookmarkBox(false);
+    }
+  }, [checkedItems]);
+
+  // console.log(ch);
+
   if (isLoading) return <Loading />;
-  if (isError) return <section>Error: {isError.message}</section>;
+  if (isError) return <Error />;
 
   return (
     <Container>
@@ -301,6 +333,7 @@ const SearchResult = () => {
                   newItems[idx] = {
                     itemSeq: item.itemSeq,
                     itemName: item.itemName,
+                    entpName: item.entpName,
                     isChecked: !prev[idx]?.isChecked,
                   };
                   return newItems;
