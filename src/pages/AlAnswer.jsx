@@ -1,38 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { firstQuestion } from "../atoms";
-import { useQueries } from "@tanstack/react-query";
 
 const Container = styled.section`
   width: 100%;
   height: 100vh;
   position: relative;
   .answer_section {
-    height: calc(100% - 200px);
-    overflow-y: auto;
+    /* margin-top: 60px; */
+    height: calc(100vh - 250px);
+    /* overflow: hidden; */
     display: flex;
     padding: 0 1rem;
     flex-direction: column;
     justify-content: flex-end;
     gap: 1rem;
-    > div {
+    .talk_section {
+      flex: 1;
+      margin-top: 60px;
+      overflow-y: auto;
       display: flex;
-      padding: 1.25rem;
-      justify-content: center;
-      align-items: center;
-      border-radius: 1rem;
-      max-width: 80%;
-      line-height: 140%;
-    }
-    .question {
-      align-self: flex-end;
-      border: 1px solid var(--main-color);
-    }
-    .answer {
-      align-self: flex-start;
-      background: var(--main-color);
-      color: #efefef;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      gap: 1rem;
+      > div {
+        display: flex;
+        padding: 1.25rem;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1rem;
+        max-width: 80%;
+        line-height: 140%;
+        box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.25);
+      }
+      .question {
+        align-self: flex-end;
+        border: 1px solid var(--main-color);
+      }
+      .answer {
+        align-self: flex-start;
+        background: var(--main-color);
+        color: #efefef;
+      }
     }
   }
   .question_section {
@@ -69,6 +80,11 @@ const Container = styled.section`
       line-height: 140%;
       font-size: 1rem;
       cursor: pointer;
+      &:disabled {
+        background: #ccc !important;
+        color: #666 !important;
+        cursor: not-allowed;
+      }
     }
   }
 `;
@@ -80,9 +96,14 @@ const AlAnswer = () => {
   ]);
 
   const [input, setInput] = useState("");
-  const [response, setResponse] = useState("");
+  // const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [displayedAnswer, setDisplayedAnswer] = useState("");
+  const typingIntervalRef = useRef(null);
+
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  console.log(loading);
 
   const getGPTResponse = async (questionText) => {
     setLoading(true);
@@ -101,12 +122,13 @@ const AlAnswer = () => {
             Authorization: `Bearer ${apiKey}`,
           },
           body: JSON.stringify({
-            model: "gpt-3.5-turbo",
+            // model: "gpt-3.5-turbo",
+            model: "gpt-4o-mini",
             messages: [
               {
                 role: "system",
                 content:
-                  "You are a knowledgeable assistant and must only provide answers related to medical information. Always include the following disclaimer at the end of your responses: ' 약과에서 제공되는 정보는 일반적인 건강 정보로, 의학적 조언이나 진단을 대신하지 않습니다.'",
+                  "You are a knowledgeable assistant and must only provide answers related to medical information. Always include the following disclaimer at the end of your responses:  약과에서 제공되는 정보는 일반적인 건강 정보로, 의학적 조언이나 진단을 대신하지 않습니다.",
               },
               ...messageHistory,
               { role: "user", content: questionText },
@@ -126,7 +148,7 @@ const AlAnswer = () => {
       console.error("오류 발생:", error);
       return "오류가 발생했습니다. 다시 시도해주세요.";
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -139,15 +161,38 @@ const AlAnswer = () => {
         !loading &&
         lastMessage?.message.length > 0
       ) {
+        // setLoading(true);
         const answer = await getGPTResponse(lastMessage.message);
         setTalk((prev) => [...prev, { type: "answer", message: answer }]);
       }
     };
 
+    // setLoading(false);
     getAnswer();
   }, [talk]);
 
-  // 새 질문 제출 핸들러
+  useEffect(() => {
+    const lastMessage = talk[talk.length - 1];
+    if (lastMessage?.type === "answer") {
+      let index = -1;
+      setDisplayedAnswer("");
+
+      clearInterval(typingIntervalRef.current);
+
+      typingIntervalRef.current = setInterval(() => {
+        index++;
+        if (index < lastMessage.message.length) {
+          setDisplayedAnswer((prev) => prev + lastMessage.message[index]);
+        } else {
+          clearInterval(typingIntervalRef.current);
+          setLoading(false);
+        }
+      }, 80);
+    }
+
+    return () => clearInterval(typingIntervalRef.current);
+  }, [talk]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!input.trim() || loading) return;
@@ -159,16 +204,23 @@ const AlAnswer = () => {
   return (
     <Container>
       <div className="answer_section">
-        {talk.map((it, idx) => {
-          return (
-            <div
-              className={it.type === "question" ? "question" : "answer"}
-              key={idx}
-            >
-              {it.message}
-            </div>
-          );
-        })}
+        <div className="talk_section">
+          {talk.map((it, idx) => {
+            return (
+              <div
+                className={it.type === "question" ? "question" : "answer"}
+                key={idx}
+              >
+                {/* {it.message} */}
+                {it.type === "question"
+                  ? it.message
+                  : idx === talk.length - 1
+                  ? displayedAnswer
+                  : it.message}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <form className="question_section" onSubmit={handleSubmit}>
         <textarea

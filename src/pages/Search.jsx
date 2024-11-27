@@ -17,10 +17,7 @@ const Conatiner = styled.section`
   display: flex;
   flex-direction: column;
   flex: 1;
-  > div {
-    /* flex: 1; */
-    /* height: 50%; */
-  }
+
   .topSearch {
     position: relative;
     height: 50%;
@@ -61,7 +58,7 @@ const Conatiner = styled.section`
   }
   .searchInfo {
     position: absolute;
-    top: 70%;
+    top: 90%;
     left: 0;
     width: 100%;
     display: flex;
@@ -70,6 +67,7 @@ const Conatiner = styled.section`
     padding: 0.5rem 1rem;
     overflow-y: scroll;
     scrollbar-width: none;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
       display: none;
@@ -212,21 +210,18 @@ const Search = () => {
               animate="animate"
               exit="exit"
             >
-              {searchInput.length === 0
-                ? defaultSearchResult.map((item, index) => (
-                    <p key={index}>{item}</p>
-                  ))
-                : searchResult.map((item, index) => (
-                    <p
-                      key={index}
-                      onClick={() => {
-                        goResult(item);
-                        setKeyword(item);
-                      }}
-                    >
-                      {item.itemName}
-                    </p>
-                  ))}
+              {searchInput.length > 0 &&
+                searchResult.map((item, index) => (
+                  <p
+                    key={index}
+                    onClick={() => {
+                      goResult(item.itemName);
+                      setKeyword(item.itemName);
+                    }}
+                  >
+                    {item.itemName}
+                  </p>
+                ))}
             </motion.div>
           )}
         </AnimatePresence>
@@ -247,7 +242,7 @@ const Search = () => {
               ))}
             </div>
           </div>
-          <div className="searchHospitalList searchList">
+          {/* <div className="searchHospitalList searchList">
             <h3 className="searchDrugList_title searchList_title">
               추천 병원 검색
             </h3>
@@ -261,7 +256,7 @@ const Search = () => {
               <span>#피부연고</span>
               <span>#진통제</span>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
     </Conatiner>

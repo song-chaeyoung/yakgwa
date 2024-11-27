@@ -40,11 +40,16 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
+  html {
+    font-size: 15px;
+  }
+
   body {
     font-family: "Noto Sans KR";
     line-height: 1;
     /* height: 2000px; */
     background: #fff;
+    /* font-size: 14px; */
     section {
       padding-top: 60px;
   /* padding: 4rem 1.5rem 6rem; */

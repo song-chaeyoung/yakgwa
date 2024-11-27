@@ -110,14 +110,14 @@ const iconList = [
     text: "즐겨찾기",
     path: "/bookmark",
   },
-  {
-    icon: faGear,
-    text: "설정",
-  },
-  {
-    icon: faWrench,
-    text: "버전확인",
-  },
+  // {
+  //   icon: faGear,
+  //   text: "설정",
+  // },
+  // {
+  //   icon: faWrench,
+  //   text: "버전확인",
+  // },
 ];
 
 const HeaderList = ({ setIsOpen, variants }) => {

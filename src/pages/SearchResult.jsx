@@ -242,18 +242,11 @@ const SearchResult = () => {
         await updateDoc(userDocRef, {
           Bookmark: uniqueBookmarks,
         });
-
-        // await updateDoc(userDocRef, {
-        //   Bookmark: [...userDoc.data().Bookmark, ...checkedData],
-        // });
       }
     } catch (err) {
       console.log("submit error", err);
     } finally {
-      // setCheckedItems([]);
-      setCheckedItems((prevItems) =>
-        prevItems.map((item) => (item ? { ...item, isChecked: false } : item))
-      );
+      setCheckedItems([]);
       setAlert(true);
     }
   };
@@ -266,19 +259,45 @@ const SearchResult = () => {
   const data = results.map((result) => result.data || []);
   const searchResult = data.flat();
 
-  // bookmarkBox 처리
-  useEffect(() => {
-    // const searchResult = data.flat();
-    if (searchResult && searchResult.length > 0) {
-      setCheckedItems(
-        searchResult.map((item) => ({
+  const checkEvent = (e, item) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setCheckedItems((prev) => {
+      const existingItem = prev.find(
+        (checkedItem) => checkedItem.itemSeq === item.itemSeq
+      );
+
+      if (existingItem) {
+        return prev.map((checkedItem) =>
+          checkedItem.itemSeq === item.itemSeq
+            ? { ...checkedItem, isChecked: !checkedItem.isChecked }
+            : checkedItem
+        );
+      }
+
+      return [
+        ...prev,
+        {
           itemSeq: item.itemSeq,
           itemName: item.itemName,
           entpName: item.entpName,
-          isChecked: false,
-        }))
-      );
-    }
+          isChecked: true,
+        },
+      ];
+    });
+  };
+
+  // bookmarkBox 처리
+  useEffect(() => {
+    setCheckedItems(
+      searchResult.map((item) => ({
+        itemSeq: item.itemSeq,
+        itemName: item.itemName,
+        entpName: item.entpName,
+        isChecked: false,
+      }))
+    );
   }, []);
 
   useEffect(() => {
@@ -289,8 +308,6 @@ const SearchResult = () => {
       setBookmarkBox(false);
     }
   }, [checkedItems]);
-
-  // console.log(ch);
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
@@ -318,27 +335,18 @@ const SearchResult = () => {
           >
             <input
               type="checkbox"
-              name={`check-${idx}`}
-              id={`check-${idx}`}
-              checked={checkedItems[idx]?.isChecked || false}
+              name={`check-${item.itemSeq}`}
+              id={`check-${item.itemSeq}`}
+              checked={
+                checkedItems.find(
+                  (checkedItem) => checkedItem.itemSeq === item.itemSeq
+                )?.isChecked || false
+              }
               onChange={() => {}}
             />
             <label
-              htmlFor={`check-${idx}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setCheckedItems((prev) => {
-                  const newItems = [...prev];
-                  newItems[idx] = {
-                    itemSeq: item.itemSeq,
-                    itemName: item.itemName,
-                    entpName: item.entpName,
-                    isChecked: !prev[idx]?.isChecked,
-                  };
-                  return newItems;
-                });
-              }}
+              htmlFor={`check-${item.itemSeq}`}
+              onClick={(e) => checkEvent(e, item)}
             >
               <FontAwesomeIcon icon={faCheck} />
             </label>

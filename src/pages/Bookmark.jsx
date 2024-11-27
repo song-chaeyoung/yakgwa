@@ -59,6 +59,7 @@ const Container = styled.section`
     align-items: center;
     margin: 0 auto;
     padding: 0.5rem 1rem 1.5rem;
+    margin-bottom: 5rem;
     background: #fff;
     > div {
       min-height: 5rem;
@@ -67,6 +68,7 @@ const Container = styled.section`
       align-items: center;
       gap: 1.25rem;
       border-bottom: 1px solid #999;
+      padding: 0.75rem 0;
       /* padding: 0.6rem 1rem; */
       cursor: pointer;
       > input {
@@ -212,8 +214,36 @@ const Bookmark = () => {
     setBookmarkBox(checkedItems.some((item) => item.isChecked));
   }, [checkedItems]);
 
+  const checkEvent = (e, item) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    setCheckedItems((prev) => {
+      const existingItem = prev.find(
+        (checkedItem) => checkedItem.itemSeq === item.itemSeq
+      );
+
+      if (existingItem) {
+        return prev.map((checkedItem) =>
+          checkedItem.itemSeq === item.itemSeq
+            ? { ...checkedItem, isChecked: !checkedItem.isChecked }
+            : checkedItem
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          itemSeq: item.itemSeq,
+          itemName: item.itemName,
+          entpName: item.entpName,
+          isChecked: true,
+        },
+      ];
+    });
+  };
+
   const selectDelete = () => {
-    console.log("click");
     try {
       const selectedItems = checkedItems.filter((item) => item.isChecked);
 
@@ -253,37 +283,30 @@ const Bookmark = () => {
     );
   }
 
-  console.log(userBookmark);
-
   return (
     <Container>
       <h2>즐겨찾기</h2>
       <div className="bookmark_list">
         {userBookmark.map((item, idx) => (
-          <div className="bookmark_item" key={idx}>
+          <div
+            className="bookmark_item"
+            key={idx}
+            onClick={() => navigate(`/drugresult?q=${item.itemName}`)}
+          >
             <input
               type="checkbox"
-              name={`check-${idx}`}
-              id={`check-${idx}`}
-              checked={checkedItems[idx]?.isChecked || false}
+              name={`check-${item.itemSeq}}`}
+              id={`check-${item.itemSeq}}`}
+              checked={
+                checkedItems.find(
+                  (checkedItem) => checkedItem.itemSeq === item.itemSeq
+                )?.isChecked || false
+              }
               onChange={() => {}}
             />
             <label
-              htmlFor={`check-${idx}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setCheckedItems((prev) => {
-                  const newItems = [...prev];
-                  newItems[idx] = {
-                    itemSeq: item.itemSeq,
-                    itemName: item.itemName,
-                    entpName: item.entpName,
-                    isChecked: !prev[idx]?.isChecked,
-                  };
-                  return newItems;
-                });
-              }}
+              htmlFor={`check-${item.itemSeq}}`}
+              onClick={(e) => checkEvent(e, item)}
             >
               <FontAwesomeIcon icon={faCheck} />
             </label>
