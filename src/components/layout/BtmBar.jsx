@@ -47,10 +47,10 @@ const BtmBar = () => {
   const homeMatch = useMatch("/");
   const question1Match = useMatch("/question");
   const searchHomeMatch = useMatch("/search");
-  const searchDrugMatch = useMatch("/drugResult");
+  const searchDrugMatch = useMatch("/drugresult");
   const searchResultMatch = useMatch("/result");
   const bookmarkMatch = useMatch("/bookmark");
-  const alAnswerMatch = useMatch("/alAnswer");
+  const alAnswerMatch = useMatch("/alanswer");
   const searchMatch = Boolean(
     searchHomeMatch || searchDrugMatch || searchResultMatch
   );
