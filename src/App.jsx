@@ -8,7 +8,7 @@ import Search from "./pages/Search";
 import SearchResult from "./pages/SearchResult";
 import Bookmark from "./pages/Bookmark";
 import AlAnswer from "./pages/AlAnswer";
-import DrugResult from "./pages/drugResult";
+import DrugResult from "./pages/DrugResult";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "./firebase";
 const router = createBrowserRouter([
