@@ -8,23 +8,31 @@ const Container = styled.section`
   height: 100vh;
   position: relative;
   .answer_section {
-    /* margin-top: 60px; */
-    height: calc(100vh - 250px);
-    /* overflow: hidden; */
-    display: flex;
-    padding: 0 1rem;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 1rem;
+    position: absolute;
+    top: 0;
+    bottom: 90px;
+    left: 0;
+    right: 0;
+    height: calc(100vh - 90px);
     .talk_section {
-      flex: 1;
-      margin-top: 60px;
+      height: 100%;
       overflow-y: auto;
+      padding: 70px 1rem 6.2rem;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-
+      justify-content: flex-start;
       gap: 1rem;
+      > div:first-child {
+        margin-top: auto;
+      }
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
       > div {
         display: flex;
         padding: 1.25rem;
@@ -47,15 +55,16 @@ const Container = styled.section`
     }
   }
   .question_section {
+    height: 6rem;
     width: 100%;
     position: fixed;
-    bottom: 90px;
+    bottom: 70px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0 1rem;
+    padding: 0.5rem 1rem;
     height: 5rem;
     background: #fff;
     > textarea {
@@ -101,9 +110,15 @@ const AlAnswer = () => {
 
   const [displayedAnswer, setDisplayedAnswer] = useState("");
   const typingIntervalRef = useRef(null);
+  const talkSectionRef = useRef(null);
 
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-  console.log(loading);
+
+  useEffect(() => {
+    if (talkSectionRef.current) {
+      talkSectionRef.current.scrollTop = talkSectionRef.current.scrollHeight;
+    }
+  }, [talk]);
 
   const getGPTResponse = async (questionText) => {
     setLoading(true);
@@ -187,6 +202,11 @@ const AlAnswer = () => {
           clearInterval(typingIntervalRef.current);
           setLoading(false);
         }
+
+        if (talkSectionRef.current) {
+          talkSectionRef.current.scrollTop =
+            talkSectionRef.current.scrollHeight;
+        }
       }, 80);
     }
 
@@ -204,14 +224,13 @@ const AlAnswer = () => {
   return (
     <Container>
       <div className="answer_section">
-        <div className="talk_section">
+        <div className="talk_section" ref={talkSectionRef}>
           {talk.map((it, idx) => {
             return (
               <div
                 className={it.type === "question" ? "question" : "answer"}
                 key={idx}
               >
-                {/* {it.message} */}
                 {it.type === "question"
                   ? it.message
                   : idx === talk.length - 1

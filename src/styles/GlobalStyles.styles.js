@@ -15,6 +15,13 @@ export const GlobalStyle = createGlobalStyle`
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'NEXON Lv2 Gothic';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/NEXON Lv2 Gothic.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
   @import url("https://fonts.googleapis.com/earlyaccess/notosanskr.css");
 
   ${reset}
@@ -45,17 +52,12 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: "Noto Sans KR";
+    /* font-family: "Noto Sans KR"; */
+    font-family: "NEXON Lv2 Gothic";
     line-height: 1;
-    /* height: 2000px; */
     background: #fff;
-    /* font-size: 14px; */
     section {
       padding-top: 60px;
-  /* padding: 4rem 1.5rem 6rem; */
-
-      /* padding: 0 10px; */
-      /* padding: 60px 10px 0; */
     }
 
   }

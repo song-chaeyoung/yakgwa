@@ -38,7 +38,6 @@ const Container = styled.section`
       line-height: 1.4;
       letter-spacing: -0.0125rem;
       color: #333;
-      /* word-break: keep-all; */
       font-weight: 500;
     }
   }

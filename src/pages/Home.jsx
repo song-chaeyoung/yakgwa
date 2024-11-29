@@ -3,25 +3,24 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useQuery } from "@tanstack/react-query";
-import { getAllDrugs, searchDrugEfcyQesitm } from "../api";
+import { searchDrugEfcyQesitm } from "../api";
 import HomeTab from "../components/HomeTab";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { firstQuestion } from "../atoms";
+
 const Container = styled.section`
   width: 100%;
   height: 100vh;
   background: var(--main-color);
   .home_top_search {
-    /* height: fit-content; */
     height: 10.5rem;
     padding: 2.3rem 0.75rem;
-    /* height: 30%; */
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 1.5rem;
-    /* align-items: center; */
     > div {
       color: #fff;
       display: flex;
@@ -62,9 +61,11 @@ const Container = styled.section`
     }
   }
   .home_btm_exam {
-    position: relative;
-    /* height: 80%; */
-    height: calc(100% - 10.5rem);
+    position: fixed;
+    top: 15.5rem;
+    left: 0;
+    right: 0;
+    height: calc(100% - 15.5rem);
     border-radius: 3.5rem 0rem 0rem 0rem;
     background: #fff;
     display: flex;
@@ -77,8 +78,6 @@ const Container = styled.section`
       display: flex;
       gap: 0.88rem;
       transform: translateY(-50%);
-      /* justify-content: space-between; */
-      /* padding: 1.5rem; */
       > span {
         padding: 0.875rem;
         border-radius: 0.625rem;
@@ -101,7 +100,7 @@ const Container = styled.section`
 const categories = ["약품 추천", "영양제 추천"];
 
 const Home = () => {
-  const [selectedValue, setSelectedValue] = useState("1");
+  const [selectedValue, setSelectedValue] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const navigate = useNavigate();
   const setFirstQuestionInput = useSetRecoilState(firstQuestion);
@@ -109,11 +108,6 @@ const Home = () => {
   const handleChange = (e) => {
     setSelectedValue(e.target.value);
   };
-
-  // const allDrug = useQuery({
-  //   queryKey: ["allDrug"],
-  //   queryFn: () => getAllDrugs(),
-  // });
 
   const efcyItem = "비타민";
 
@@ -124,6 +118,11 @@ const Home = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (selectedValue === "") {
+      alert("분야를 선택해주세요.");
+      return;
+    }
     const question = e.target[0].value;
 
     if (selectedValue === "drug") {
@@ -147,14 +146,14 @@ const Home = () => {
             onChange={handleChange}
             value={selectedValue}
           >
-            <option value={selectedValue} disabled>
+            <option value="" disabled>
               분야 선택하기
             </option>
             <option value="drug">의약품검색</option>
             <option value="ai">AI질문</option>
           </select>
         </div>
-        <form action="" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <input type="text" placeholder="어디가 아프신가요?" required />
           <button type="submit">
             <FontAwesomeIcon icon={faSearch} />
@@ -172,7 +171,6 @@ const Home = () => {
               {category}
             </span>
           ))}
-          {/* <span>카테고리</span> */}
         </div>
         <HomeTab selectedCategory={selectedCategory} />
       </div>

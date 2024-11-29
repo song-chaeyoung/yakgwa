@@ -113,7 +113,6 @@ const Question = () => {
           <span>반드시 의료 전문가와 상담</span>하세요.
         </p>
       </div>
-      {/* <ChatGPTComponent /> */}
     </Container>
   );
 };

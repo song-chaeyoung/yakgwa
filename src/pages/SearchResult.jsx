@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   searchDrugName,
   searchDrugEfcyQesitm,
@@ -17,18 +17,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { drugData, searchKeyword } from "../atoms";
 import { useRecoilState } from "recoil";
-import { getSearchDrugList } from "../api";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import Bookmark from "./Bookmark";
 import Alert from "../components/Alert";
 import Error from "../components/Error";
 
@@ -112,7 +103,6 @@ const Container = styled.section`
         p:nth-child(1) {
           font-size: 1.25rem;
           font-weight: 700;
-          /* word-break: keep-all; */
           line-height: 1.3;
           word-break: break-word;
           overflow-wrap: break-word;
@@ -120,7 +110,6 @@ const Container = styled.section`
         }
         p:nth-child(2) {
           font-size: 0.9rem;
-          /* color: #666; */
         }
       }
     }
@@ -205,12 +194,6 @@ const SearchResult = () => {
     setDrugInfo(item);
     navigate(`/drugresult?q=${item.itemName}`);
   };
-
-  // useEffect(() => {
-  //   if (checkedItems.length > 0) {
-  //     setBookmarkBox(checkedItems.some((item) => item.isChecked));
-  //   }
-  // }, [checkedItems]);
 
   const allCancel = () => {
     setCheckedItems([]);

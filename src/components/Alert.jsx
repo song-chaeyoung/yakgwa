@@ -10,7 +10,6 @@ const Container = styled(motion.div)`
   transform: translate(-50%, -50%);
   z-index: 100;
   background-color: #fff;
-  /* padding: 2rem !important; */
   padding: 0 !important;
   display: flex;
   flex-direction: column;
@@ -35,7 +34,6 @@ const Container = styled(motion.div)`
     display: flex;
     align-items: center;
     justify-content: center;
-    /* gap: 1rem; */
     text-align: center;
     gap: 0.01rem;
     > span {
@@ -46,11 +44,9 @@ const Container = styled(motion.div)`
       text-align: center;
       cursor: pointer;
       &:nth-child(1) {
-        /* border-right: 1px solid #fff; */
       }
     }
     > div {
-      /* height: 20px; */
       width: 1px;
       background: #fff;
     }

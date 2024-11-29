@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { auth, db } from "../firebase";
 import {
-  getDoc,
   doc,
   query,
   collection,
-  orderBy,
   onSnapshot,
   where,
   updateDoc,
@@ -22,6 +20,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Loading from "../components/Loading";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRecoilState } from "recoil";
+import { drugData } from "../atoms";
 
 const ZeroContainer = styled.section`
   display: flex;
@@ -53,7 +53,6 @@ const Container = styled.section`
   .bookmark_list {
     width: 90%;
     height: fit-content;
-    /* min-height: 100vh; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -69,7 +68,6 @@ const Container = styled.section`
       gap: 1.25rem;
       border-bottom: 1px solid #999;
       padding: 0.75rem 0;
-      /* padding: 0.6rem 1rem; */
       cursor: pointer;
       > input {
         display: none;
@@ -103,7 +101,6 @@ const Container = styled.section`
         p:nth-child(1) {
           font-size: 1.25rem;
           font-weight: 700;
-          /* word-break: keep-all; */
           line-height: 1.3;
           word-break: break-word;
           overflow-wrap: break-word;
@@ -111,7 +108,6 @@ const Container = styled.section`
         }
         p:nth-child(2) {
           font-size: 0.9rem;
-          /* color: #666; */
         }
       }
     }
@@ -150,6 +146,7 @@ const Container = styled.section`
 `;
 
 const Bookmark = () => {
+  const [drugInfo, setDrugInfo] = useRecoilState(drugData);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
@@ -270,6 +267,11 @@ const Bookmark = () => {
     });
   };
 
+  const goDrugResult = (item) => {
+    setDrugInfo({});
+    navigate(`/drugresult?q=${item.itemName}`);
+  };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -291,7 +293,7 @@ const Bookmark = () => {
           <div
             className="bookmark_item"
             key={idx}
-            onClick={() => navigate(`/drugresult?q=${item.itemName}`)}
+            onClick={() => goDrugResult(item)}
           >
             <input
               type="checkbox"

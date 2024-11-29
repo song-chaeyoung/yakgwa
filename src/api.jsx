@@ -1,8 +1,3 @@
-import { useQueries } from "@tanstack/react-query";
-
-const apiKey = import.meta.env.VITE_API_KEY;
-const apiUrl = import.meta.env.VITE_API_URL;
-
 const API_BASE_URL = "http://localhost:4000/api/drugs";
 
 export const getAllDrugs = async () => {

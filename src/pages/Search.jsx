@@ -21,7 +21,6 @@ const Conatiner = styled.section`
   .topSearch {
     position: relative;
     height: 50%;
-    /* margin: 50px 0; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,11 +86,9 @@ const Conatiner = styled.section`
     align-items: center;
     justify-content: center;
     gap: 30px;
-    /* padding: 5rem 0; */
     .searchList {
       padding: 0 10px;
       h3 {
-        /* font-size: 14px; */
         margin-bottom: 15px;
         color: #fff;
       }
@@ -110,21 +107,6 @@ const Conatiner = styled.section`
     }
   }
 `;
-
-const defaultSearchResult = [
-  "두통",
-  "소화제",
-  "고혈압",
-  "피부염",
-  "소염제",
-  "항생제",
-  "두통",
-  "소화제",
-  "고혈압",
-  "피부염",
-  "소염제",
-  "항생제",
-];
 
 const oftenDrugs = [
   "피로회복",
@@ -242,21 +224,6 @@ const Search = () => {
               ))}
             </div>
           </div>
-          {/* <div className="searchHospitalList searchList">
-            <h3 className="searchDrugList_title searchList_title">
-              추천 병원 검색
-            </h3>
-            <div className="searchDrugList_items searchList_items">
-              <span>#피로회복제</span>
-              <span>#항생제</span>
-              <span>#소염제</span>
-              <span>#두통약</span>
-              <span>#소화제</span>
-              <span>#고혈압약</span>
-              <span>#피부연고</span>
-              <span>#진통제</span>
-            </div>
-          </div> */}
         </div>
       )}
     </Conatiner>

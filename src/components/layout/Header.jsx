@@ -19,6 +19,8 @@ const HeaderContainer = styled.header`
   background: var(--main-color);
   color: #fff;
   z-index: 100;
+  box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.1);
+
   h1 {
     font-size: 30px;
     font-family: "SDSamliphopangche_Basic";

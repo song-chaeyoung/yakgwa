@@ -6,7 +6,6 @@ import BtmBar from "./BtmBar";
 
 const LayoutContainer = styled.div`
   width: 100%;
-  /* padding: 0 10px; */
 `;
 
 const Layout = () => {

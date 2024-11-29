@@ -57,14 +57,8 @@ const Container = styled(motion.div)`
     top: 15px;
     right: 22px;
     color: #fff;
-    /* width: 22px;
-    height: 22px; */
     font-size: 26px;
     cursor: pointer;
-    svg {
-      /* width: 100%;
-      height: 100%; */
-    }
   }
   .content {
     display: flex;
@@ -156,10 +150,6 @@ const HeaderList = ({ setIsOpen, variants }) => {
               <p>{it.text}</p>
             </div>
           ))}
-          {/* <div className="headerList_icon">
-            <FontAwesomeIcon icon={faHome} />
-            <p>홈</p>
-          </div> */}
         </div>
       </Container>
     </Background>

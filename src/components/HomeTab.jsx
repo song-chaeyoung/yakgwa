@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
+  position: fixed;
+  top: 18.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 0 0.75rem;
+  margin-bottom: 10rem;
   width: 100%;
+  height: fit-content;
   .home_symptom {
     min-width: 100%;
     padding: 1.12rem;
@@ -20,7 +24,6 @@ const Container = styled.div`
       width: 5rem;
       height: 5rem;
       min-width: 5rem;
-      background: #999;
       > img {
         width: 100%;
         height: 100%;
@@ -42,28 +45,28 @@ const Container = styled.div`
         font-size: 0.875rem;
         color: #666;
         line-height: 120%;
-        &::after {
-          content: " >";
-          transform: translateX(0);
-        }
       }
     }
   }
 `;
 
 const HomeTab = ({ selectedCategory }) => {
-  // useEffect(() => {
-  //   if (selectedCategory === "약품 추천") {
-  //     console.log("약품 추천");
-  //   } else if (selectedCategory === "영양제 추천") {
-  //     console.log("영양제 추천");
-  //   }
-  // }, [selectedCategory]);
-
+  const onClickEvent = () => {
+    alert("아직 준비중인 서비스입니다.");
+  };
   return (
     <Container className="home_symptom_list">
-      <div className="home_symptom">
-        <div className="home_symptom_img"></div>
+      <div className="home_symptom" onClick={onClickEvent}>
+        <div className="home_symptom_img">
+          <img
+            src={
+              selectedCategory === "약품 추천"
+                ? "/mainIcon0.png"
+                : "/mainIcon1.png"
+            }
+            alt="mainIcon"
+          />
+        </div>
         <div className="home_symptom_desc">
           <h5>
             {selectedCategory === "약품 추천"
@@ -77,8 +80,17 @@ const HomeTab = ({ selectedCategory }) => {
           </p>
         </div>
       </div>
-      <div className="home_symptom">
-        <div className="home_symptom_img"></div>
+      <div className="home_symptom" onClick={onClickEvent}>
+        <div className="home_symptom_img">
+          <img
+            src={
+              selectedCategory === "약품 추천"
+                ? "/mainIcon2.png"
+                : "/mainIcon3.png"
+            }
+            alt="mainIcon"
+          />
+        </div>
         <div className="home_symptom_desc">
           <h5>
             {selectedCategory === "약품 추천"
@@ -92,8 +104,17 @@ const HomeTab = ({ selectedCategory }) => {
           </p>
         </div>
       </div>
-      <div className="home_symptom">
-        <div className="home_symptom_img"></div>
+      <div className="home_symptom" onClick={onClickEvent}>
+        <div className="home_symptom_img">
+          <img
+            src={
+              selectedCategory === "약품 추천"
+                ? "/mainIcon4.png"
+                : "/mainIcon5.png"
+            }
+            alt="mainIcon"
+          />
+        </div>
         <div className="home_symptom_desc">
           <h5>
             {selectedCategory === "약품 추천" ? "통증 완화 약" : "오메가-3"}
