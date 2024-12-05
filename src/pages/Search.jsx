@@ -170,7 +170,6 @@ const Search = () => {
   const data = results.map((result) => result.data || []);
   const searchResult = data.flat().slice(0, 10);
 
-  console.log(searchResult);
   return (
     <Conatiner>
       <form className="topSearch" onSubmit={handleSubmit}>

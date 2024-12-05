@@ -52,7 +52,6 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    /* font-family: "Noto Sans KR"; */
     font-family: "NEXON Lv2 Gothic";
     line-height: 1;
     background: #fff;

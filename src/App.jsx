@@ -11,6 +11,7 @@ import AlAnswer from "./pages/AlAnswer";
 import DrugResult from "./pages/DrugResult";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "./firebase";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -53,8 +54,7 @@ const App = () => {
     signInAnonymously(auth)
       .then((userCredential) => {
         const user = userCredential.user;
-        setUid(user.uid); // UID 저장
-        console.log("Logged in with UID:", user.uid);
+        setUid(user.uid);
       })
       .catch((error) => {
         console.error("Anonymous login failed:", error);

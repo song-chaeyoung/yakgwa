@@ -2,13 +2,12 @@ import React from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
-  position: fixed;
-  top: 18.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 0 0.75rem;
-  margin-bottom: 10rem;
+  margin-top: 4rem;
+  margin-bottom: 5rem;
   width: 100%;
   height: fit-content;
   .home_symptom {

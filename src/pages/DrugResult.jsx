@@ -39,6 +39,7 @@ const Container = styled.section`
       letter-spacing: -0.0125rem;
       color: #333;
       font-weight: 500;
+      word-break: break-word;
     }
   }
   .backArr {
@@ -56,6 +57,10 @@ const DrugResult = () => {
   const [searchParams] = useSearchParams();
   const keywordParams = searchParams.get("q");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const result = useQuery({
     queryKey: ["drugInfo", keywordParams],

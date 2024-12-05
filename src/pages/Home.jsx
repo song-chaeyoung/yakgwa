@@ -11,12 +11,12 @@ import { firstQuestion } from "../atoms";
 
 const Container = styled.section`
   width: 100%;
-  height: 100vh;
+  height: fit-content;
   background: var(--main-color);
+  overflow: hidden;
   .home_top_search {
     height: 10.5rem;
     padding: 2.3rem 0.75rem;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -61,16 +61,14 @@ const Container = styled.section`
     }
   }
   .home_btm_exam {
-    position: fixed;
-    top: 15.5rem;
-    left: 0;
-    right: 0;
-    height: calc(100% - 15.5rem);
+    position: relative;
+    height: auto;
     border-radius: 3.5rem 0rem 0rem 0rem;
     background: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
+    -webkit-overflow-scrolling: touch;
     .home_category {
       position: absolute;
       top: 0;
@@ -78,6 +76,7 @@ const Container = styled.section`
       display: flex;
       gap: 0.88rem;
       transform: translateY(-50%);
+      overflow-x: hidden;
       > span {
         padding: 0.875rem;
         border-radius: 0.625rem;

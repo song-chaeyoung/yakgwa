@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-// import ChatGPTComponent from "../components/ChatGaptAPI";
 import { useRecoilState } from "recoil";
 import { firstQuestion } from "../atoms";
 
@@ -78,9 +77,6 @@ const Question = () => {
   const [firstQuestionInput, setFirstQuestionInput] =
     useRecoilState(firstQuestion);
 
-  // const { register, handleSubmit, setValue } = useForm();
-  // console.log(firstQuestionInput);
-
   useEffect(() => {
     setFirstQuestionInput("");
   }, []);
@@ -97,7 +93,6 @@ const Question = () => {
       <img src="/drug.png" alt="drugImg" />
       <form onSubmit={handleSubmit}>
         <input
-          // {...register("question", { required: true, minLength: 10 })}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           type="text"

@@ -22,6 +22,7 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import Alert from "../components/Alert";
 import Error from "../components/Error";
+import { faFaceSadTear } from "@fortawesome/free-solid-svg-icons/faFaceSadTear";
 
 const Container = styled.section`
   width: 100%;
@@ -147,6 +148,53 @@ const Container = styled.section`
   }
 `;
 
+const EmptyContainer = styled.section`
+  width: 100%;
+  height: 100vh;
+  padding: 60px 1rem;
+  gap: 1rem;
+  > form {
+    width: 100%;
+    margin: 1.5rem 0 3rem;
+    position: relative;
+    > input {
+      color: #333;
+      width: 100%;
+      padding: 0.5rem 0.25rem;
+      padding-right: 2rem;
+      border: none;
+      border-bottom: 2px solid var(--main-color);
+      font-size: 1.25rem;
+    }
+    > button {
+      position: absolute;
+      right: 0.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      > svg {
+        color: #666;
+        font-size: 1.15rem;
+      }
+    }
+  }
+  .empty_text {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-size: 1.25rem;
+    > svg {
+      color: #666;
+      font-size: 3.5rem;
+    }
+  }
+`;
+
 const SearchResult = () => {
   const [keyword, setKeyword] = useRecoilState(searchKeyword);
   const [searchParams] = useSearchParams();
@@ -217,7 +265,6 @@ const SearchResult = () => {
         const existingBookmarks = userDoc.data().Bookmark || [];
         const newBookmarks = [...existingBookmarks, ...checkedData];
 
-        // 중복 제거 (itemSeq를 기준으로)
         const uniqueBookmarks = Array.from(
           new Map(newBookmarks.map((item) => [item.itemSeq, item])).values()
         );
@@ -233,8 +280,6 @@ const SearchResult = () => {
       setAlert(true);
     }
   };
-
-  console.log(checkedItems);
 
   // data 처리
   const isLoading = results.some((result) => result.isLoading);
@@ -294,6 +339,27 @@ const SearchResult = () => {
 
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
+
+  if (searchResult.length === 0)
+    return (
+      <EmptyContainer>
+        <form onSubmit={searchEvent}>
+          <input
+            type="text"
+            placeholder="검색 내용"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button type="submit">
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+        </form>
+        <div className="empty_text">
+          <FontAwesomeIcon icon={faFaceSadTear} />
+          검색 결과가 없습니다
+        </div>
+      </EmptyContainer>
+    );
 
   return (
     <Container>
