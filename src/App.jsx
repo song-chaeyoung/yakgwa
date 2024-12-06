@@ -11,6 +11,8 @@ import AlAnswer from "./pages/AlAnswer";
 import DrugResult from "./pages/DrugResult";
 import { signInAnonymously } from "firebase/auth";
 import { auth } from "./firebase";
+import StartLoading from "./pages/StartLoading";
+import { AnimatePresence } from "framer-motion";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,15 @@ const router = createBrowserRouter([
 
 const App = () => {
   const [uid, setUid] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000); // 2초로 설정 (1초 로딩 + 0.5초 페이드아웃)
+
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     signInAnonymously(auth)
@@ -64,6 +75,9 @@ const App = () => {
   return (
     <>
       <GlobalStyle />
+      <AnimatePresence mode="wait">
+        {isLoading && <StartLoading />}
+      </AnimatePresence>
       <RouterProvider router={router}></RouterProvider>
     </>
   );
